@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/gofiber/fiber/v2 v2.21.0
+	golang.org/x/sys v0.0.0-20210927094055-39ccf1dd6fa6 // indirect
 	gorm.io/driver/mysql v1.1.3
 	gorm.io/gorm v1.22.2
 )
