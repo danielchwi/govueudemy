@@ -4,6 +4,6 @@ type User struct {
 	Id        uint
 	FirstName string
 	Lastname  string
-	Email     string
+	Email     string `gorm:"unique"`
 	Password  string
 }
