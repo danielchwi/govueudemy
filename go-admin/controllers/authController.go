@@ -30,7 +30,7 @@ func Register(c *fiber.Ctx) error {
 
 	user := models.User{
 		FirstName: data["first_name"],
-		Lastname:  data["last_name"],
+		LastName:  data["last_name"],
 		Email:     data["email"],
 		Password:  password,
 	}
