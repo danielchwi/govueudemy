@@ -5,7 +5,6 @@ import (
 	"govue/models"
 
 	"github.com/gofiber/fiber/v2"
-	"golang.org/x/crypto/bcrypt"
 )
 
 func GetAll(c *fiber.Ctx) error {
@@ -23,7 +22,7 @@ func CreateUser(c *fiber.Ctx) error {
 		return err
 	}
 
-	user.Password, _ = bcrypt.GenerateFromPassword([]byte("1234"), 14)
+	user.Password = user.SetPassword(user.Password)
 
 	database.DB.Create(&user)
 
