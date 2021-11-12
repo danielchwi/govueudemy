@@ -8,7 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func GetAll(c *fiber.Ctx) error {
+func GetUsers(c *fiber.Ctx) error {
 	var users []models.User
 
 	database.DB.Find(&users)
