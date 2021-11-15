@@ -17,5 +17,9 @@ func Connect() {
 
 	DB = database
 
-	database.AutoMigrate(&models.User{}, &models.Role{})
+	database.AutoMigrate(
+		&models.User{},
+		&models.Role{},
+		&models.Permission{},
+	)
 }
