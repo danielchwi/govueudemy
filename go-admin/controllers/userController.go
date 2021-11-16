@@ -3,6 +3,7 @@ package controllers
 import (
 	"govue/database"
 	"govue/models"
+	"govue/util"
 	"math"
 	"strconv"
 
@@ -78,4 +79,58 @@ func DeleteUser(c *fiber.Ctx) error {
 	database.DB.Delete(&user)
 
 	return nil
+}
+
+func UpdateInfo(c *fiber.Ctx) error {
+	cookie := c.Cookies("jwt")
+
+	id, _ := util.ParseJwt(cookie)
+	userId, _ := strconv.Atoi(id)
+	var data map[string]string
+
+	if err := c.BodyParser(&data); err != nil {
+		return err
+	}
+
+	user := models.User{
+		Id:        uint(userId),
+		FirstName: data["first_name"],
+		LastName:  data["last_name"],
+		Email:     data["email"],
+	}
+
+	database.DB.Updates(&user)
+	database.DB.Preload("Role").Find(&user)
+
+	return c.JSON(user)
+
+}
+
+func UpdatePassword(c *fiber.Ctx) error {
+	cookie := c.Cookies("jwt")
+
+	id, _ := util.ParseJwt(cookie)
+	userId, _ := strconv.Atoi(id)
+	var data map[string]string
+
+	if err := c.BodyParser(&data); err != nil {
+		return err
+	}
+
+	if data["password"] != data["password_confirm"] {
+		c.Status(400)
+		return c.JSON(fiber.Map{
+			"messages": "Password do not match",
+		})
+	}
+
+	user := models.User{
+		Id: uint(userId),
+	}
+	user.SetPassword([]byte(data["password"]))
+
+	database.DB.Updates(&user)
+	database.DB.Preload("Role").Find(&user)
+
+	return c.JSON(user)
 }

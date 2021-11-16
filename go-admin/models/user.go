@@ -12,8 +12,9 @@ type User struct {
 	Role      Role   `gorm:"foreignKey:RoleId"`
 }
 
-func (u User) SetPassword(password []byte) []byte {
+func (u *User) SetPassword(password []byte) []byte {
 	hashPassword, _ := bcrypt.GenerateFromPassword(password, 14)
+	u.Password = hashPassword
 	return hashPassword
 }
 
