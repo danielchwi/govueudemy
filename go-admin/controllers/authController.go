@@ -32,8 +32,7 @@ func Register(c *fiber.Ctx) error {
 		Email:     data["email"],
 		RoleId:    1,
 	}
-
-	user.Password = user.SetPassword([]byte(data["password"]))
+	user.SetPassword([]byte(data["password"]))
 
 	database.DB.Create(&user)
 	database.DB.Preload("Role").Find(&user)
