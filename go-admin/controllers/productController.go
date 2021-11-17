@@ -3,7 +3,6 @@ package controllers
 import (
 	"govue/database"
 	"govue/models"
-	"math"
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
@@ -11,23 +10,8 @@ import (
 
 func GetProducts(c *fiber.Ctx) error {
 	page, _ := strconv.Atoi(c.Query("page", "1"))
-	limit := 5
-	offset := ((page - 1) * limit)
 
-	var products []models.Product
-	var total int64
-
-	database.DB.Offset(int(offset)).Limit(limit).Find(&products)
-	database.DB.Model(&models.Product{}).Count(&total)
-
-	return c.JSON(fiber.Map{
-		"data": products,
-		"meta": fiber.Map{
-			"total":     total,
-			"page":      page,
-			"last_page": math.Ceil(float64(total) / float64(limit)),
-		},
-	})
+	return c.JSON(models.Paginate(database.DB, &models.Product{}, page))
 }
 
 func CreateProduct(c *fiber.Ctx) error {
