@@ -4,9 +4,11 @@ import "gorm.io/gorm"
 
 type Order struct {
 	Id        uint        `json:"id"`
-	FirstName string      `json:"first_name"`
-	LastName  string      `json:"last_name"`
+	FirstName string      `json:"-"`
+	LastName  string      `json:"-"`
+	Name      string      `json:"name" gorm:"-"`
 	Email     string      `json:"email"`
+	Total     float32     `json:"total" gorm"-"`
 	CreatedAt string      `json:"created_at"`
 	UpdatedAt string      `json:"updated-at"`
 	OrderItem []OrderItem `json:"order_items" gorm:"foreignKey:OrderId"`
@@ -24,6 +26,15 @@ func (*Order) Take(db *gorm.DB, offset int, limit int) interface{} {
 	var orders []Order
 
 	db.Preload("OrderItem").Offset(offset).Limit(limit).Find(&orders)
+
+	for i, order := range orders {
+		orders[i].Name = order.FirstName + " " + order.LastName
+		var total float32 = 0
+		for _, orderItem := range order.OrderItem {
+			total += orderItem.Price
+		}
+		orders[i].Total = total
+	}
 
 	return orders
 }
