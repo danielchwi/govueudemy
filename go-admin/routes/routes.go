@@ -42,4 +42,5 @@ func Setup(app *fiber.App) {
 
 	app.Get("/api/orders/export", controllers.Export)
 	app.Get("/api/orders", controllers.GetOrders)
+	app.Get("/api/orders/chart", controllers.Chart)
 }

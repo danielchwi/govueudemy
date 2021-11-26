@@ -8,7 +8,7 @@ type Order struct {
 	LastName  string      `json:"-"`
 	Name      string      `json:"name" gorm:"-"`
 	Email     string      `json:"email"`
-	Total     float32     `json:"total" gorm"-"`
+	Total     float32     `json:"total" gorm:"-"`
 	CreatedAt string      `json:"created_at"`
 	UpdatedAt string      `json:"updated-at"`
 	OrderItem []OrderItem `json:"order_items" gorm:"foreignKey:OrderId"`
