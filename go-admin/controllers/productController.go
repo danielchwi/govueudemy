@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"govue/database"
+	"govue/middlewares"
 	"govue/models"
 	"strconv"
 
@@ -9,12 +10,20 @@ import (
 )
 
 func GetProducts(c *fiber.Ctx) error {
+	if err := middlewares.IsAuthorize(c, "products"); err != nil {
+		return err
+	}
+
 	page, _ := strconv.Atoi(c.Query("page", "1"))
 
 	return c.JSON(models.Paginate(database.DB, &models.Product{}, page))
 }
 
 func CreateProduct(c *fiber.Ctx) error {
+	if err := middlewares.IsAuthorize(c, "products"); err != nil {
+		return err
+	}
+
 	var product models.Product
 
 	if err := c.BodyParser(&product); err != nil {
@@ -27,6 +36,10 @@ func CreateProduct(c *fiber.Ctx) error {
 }
 
 func GetProduct(c *fiber.Ctx) error {
+	if err := middlewares.IsAuthorize(c, "products"); err != nil {
+		return err
+	}
+
 	id, _ := strconv.Atoi(c.Params("id"))
 
 	product := models.Product{Id: uint(id)}
@@ -37,6 +50,10 @@ func GetProduct(c *fiber.Ctx) error {
 }
 
 func UpdateProduct(c *fiber.Ctx) error {
+	if err := middlewares.IsAuthorize(c, "products"); err != nil {
+		return err
+	}
+
 	id, _ := strconv.Atoi(c.Params("id"))
 
 	product := models.Product{Id: uint(id)}
@@ -52,6 +69,9 @@ func UpdateProduct(c *fiber.Ctx) error {
 }
 
 func DeleteProduct(c *fiber.Ctx) error {
+	if err := middlewares.IsAuthorize(c, "products"); err != nil {
+		return err
+	}
 	id, _ := strconv.Atoi(c.Params("id"))
 
 	product := models.Product{Id: uint(id)}

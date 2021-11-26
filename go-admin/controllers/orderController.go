@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/csv"
 	"govue/database"
+	"govue/middlewares"
 	"govue/models"
 	"os"
 	"strconv"
@@ -11,12 +12,19 @@ import (
 )
 
 func GetOrders(c *fiber.Ctx) error {
+	if err := middlewares.IsAuthorize(c, "orders"); err != nil {
+		return err
+	}
+
 	page, _ := strconv.Atoi(c.Query("page", "1"))
 
 	return c.JSON(models.Paginate(database.DB, &models.Order{}, page))
 }
 
 func Export(c *fiber.Ctx) error {
+	if err := middlewares.IsAuthorize(c, "orders"); err != nil {
+		return err
+	}
 
 	filepath := "./csv/order.csv"
 
@@ -75,6 +83,9 @@ type Sales struct {
 }
 
 func Chart(c *fiber.Ctx) error {
+	if err := middlewares.IsAuthorize(c, "orders"); err != nil {
+		return err
+	}
 
 	sales := []Sales{}
 

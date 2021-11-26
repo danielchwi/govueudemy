@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"govue/database"
+	"govue/middlewares"
 	"govue/models"
 	"govue/util"
 	"strconv"
@@ -10,12 +11,20 @@ import (
 )
 
 func GetUsers(c *fiber.Ctx) error {
+	if err := middlewares.IsAuthorize(c, "users"); err != nil {
+		return err
+	}
+
 	page, _ := strconv.Atoi(c.Query("page", "1"))
 
 	return c.JSON(models.Paginate(database.DB, &models.User{}, page))
 }
 
 func CreateUser(c *fiber.Ctx) error {
+	if err := middlewares.IsAuthorize(c, "users"); err != nil {
+		return err
+	}
+
 	var user models.User
 
 	if err := c.BodyParser(&user); err != nil {
@@ -31,6 +40,10 @@ func CreateUser(c *fiber.Ctx) error {
 }
 
 func GetUser(c *fiber.Ctx) error {
+	if err := middlewares.IsAuthorize(c, "users"); err != nil {
+		return err
+	}
+
 	id, _ := strconv.Atoi(c.Params("id"))
 
 	user := models.User{Id: uint(id)}
@@ -41,6 +54,10 @@ func GetUser(c *fiber.Ctx) error {
 }
 
 func UpdateUser(c *fiber.Ctx) error {
+	if err := middlewares.IsAuthorize(c, "users"); err != nil {
+		return err
+	}
+
 	id, _ := strconv.Atoi(c.Params("id"))
 
 	user := models.User{Id: uint(id)}
@@ -57,6 +74,10 @@ func UpdateUser(c *fiber.Ctx) error {
 }
 
 func DeleteUser(c *fiber.Ctx) error {
+	if err := middlewares.IsAuthorize(c, "users"); err != nil {
+		return err
+	}
+
 	id, _ := strconv.Atoi(c.Params("id"))
 
 	user := models.User{Id: uint(id)}
@@ -66,6 +87,10 @@ func DeleteUser(c *fiber.Ctx) error {
 }
 
 func UpdateInfo(c *fiber.Ctx) error {
+	if err := middlewares.IsAuthorize(c, "users"); err != nil {
+		return err
+	}
+
 	cookie := c.Cookies("jwt")
 
 	id, _ := util.ParseJwt(cookie)
@@ -91,6 +116,10 @@ func UpdateInfo(c *fiber.Ctx) error {
 }
 
 func UpdatePassword(c *fiber.Ctx) error {
+	if err := middlewares.IsAuthorize(c, "users"); err != nil {
+		return err
+	}
+
 	cookie := c.Cookies("jwt")
 
 	id, _ := util.ParseJwt(cookie)
